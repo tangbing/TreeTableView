@@ -6,9 +6,6 @@
 //  Copyright © 2020 Tb. All rights reserved.
 //
 
-#define SCREEN_WIDTH       ([UIScreen mainScreen].bounds.size.width)
-#define SCREEN_HEIGHT      ([UIScreen mainScreen].bounds.size.height)
-#define SCREEN_HEIGHT_SAFE (([UIScreen mainScreen].bounds.size.height)-SAFEAREABOTTOM)
 
 
 #import "ViewController.h"
