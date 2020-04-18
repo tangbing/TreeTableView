@@ -6,8 +6,6 @@
 //  Copyright © 2017年 Epipe-iOS. All rights reserved.
 //
 
-#define SCREEN_WIDTH       ([UIScreen mainScreen].bounds.size.width)
-
 
 #import "ContactCell.h"
 #import <YYCategories/YYCategories.h>

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		332DC1F1244AA28800147C2E /* less_data.json in Resources */ = {isa = PBXBuildFile; fileRef = 332DC1F0244AA28800147C2E /* less_data.json */; };
 		3386A9BA24473291002E4476 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3386A9B924473291002E4476 /* AppDelegate.m */; };
 		3386A9BD24473291002E4476 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3386A9BC24473291002E4476 /* SceneDelegate.m */; };
 		3386A9C024473291002E4476 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3386A9BF24473291002E4476 /* ViewController.m */; };
@@ -26,6 +27,8 @@
 
 /* Begin PBXFileReference section */
 		2462A3A6F74E2BF68B1ABEF9 /* Pods-TreeTableViewDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TreeTableViewDemo.release.xcconfig"; path = "Target Support Files/Pods-TreeTableViewDemo/Pods-TreeTableViewDemo.release.xcconfig"; sourceTree = "<group>"; };
+		332DC1F0244AA28800147C2E /* less_data.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = less_data.json; sourceTree = "<group>"; };
+		332DC1F2244AA4DA00147C2E /* TreeTableViewDemo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TreeTableViewDemo-Prefix.pch"; sourceTree = "<group>"; };
 		3386A9B524473291002E4476 /* TreeTableViewDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TreeTableViewDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3386A9B824473291002E4476 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		3386A9B924473291002E4476 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -80,6 +83,7 @@
 			isa = PBXGroup;
 			children = (
 				3386A9E724476375002E4476 /* data.json */,
+				332DC1F0244AA28800147C2E /* less_data.json */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -128,6 +132,7 @@
 				3386A9C624473294002E4476 /* LaunchScreen.storyboard */,
 				3386A9C924473294002E4476 /* Info.plist */,
 				3386A9CA24473294002E4476 /* main.m */,
+				332DC1F2244AA4DA00147C2E /* TreeTableViewDemo-Prefix.pch */,
 			);
 			path = TreeTableViewDemo;
 			sourceTree = "<group>";
@@ -250,6 +255,7 @@
 			files = (
 				3386A9C824473294002E4476 /* LaunchScreen.storyboard in Resources */,
 				3386A9C524473294002E4476 /* Assets.xcassets in Resources */,
+				332DC1F1244AA28800147C2E /* less_data.json in Resources */,
 				3386A9C324473291002E4476 /* Main.storyboard in Resources */,
 				3386A9E824476375002E4476 /* data.json in Resources */,
 			);
@@ -456,6 +462,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = PRN7UWLM6M;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/TreeTableViewDemo/TreeTableViewDemo-Prefix.pch";
 				INFOPLIST_FILE = TreeTableViewDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -474,6 +481,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = PRN7UWLM6M;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/TreeTableViewDemo/TreeTableViewDemo-Prefix.pch";
 				INFOPLIST_FILE = TreeTableViewDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
