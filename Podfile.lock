@@ -1,0 +1,28 @@
+PODS:
+  - RATreeView (2.1.2)
+  - SDWebImage (5.6.1):
+    - SDWebImage/Core (= 5.6.1)
+  - SDWebImage/Core (5.6.1)
+  - YYCategories (1.0.4):
+    - YYCategories/no-arc (= 1.0.4)
+  - YYCategories/no-arc (1.0.4)
+
+DEPENDENCIES:
+  - RATreeView (~> 2.1.2)
+  - SDWebImage
+  - YYCategories
+
+SPEC REPOS:
+  trunk:
+    - RATreeView
+    - SDWebImage
+    - YYCategories
+
+SPEC CHECKSUMS:
+  RATreeView: 380cde0090cfde21dc6ac29137f49d3b768fdd28
+  SDWebImage: 7edb9c3ea661e77a66661f7f044de8c1b55d1120
+  YYCategories: 6bcd4314c6661a561410dce4a793379ebd306abd
+
+PODFILE CHECKSUM: 57a9d4ee743a91ea8fb4f3a3b6fcfbe08e6c6858
+
+COCOAPODS: 1.9.1
