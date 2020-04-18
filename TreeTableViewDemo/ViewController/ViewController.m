@@ -6,8 +6,6 @@
 //  Copyright © 2020 Tb. All rights reserved.
 //
 
-
-
 #import "ViewController.h"
 #import <YYCategories/YYCategories.h>
 #import "NSObject+YYModel.h"
@@ -18,7 +16,6 @@
 
 
 @interface ViewController ()<RATreeViewDataSource,RATreeViewDelegate>
-@property(nonatomic,strong)NSArray * departmentArray;
 @property(nonatomic,strong)NSMutableArray <ContactModel*>* contactDataArray;
 @property (nonatomic,strong) NSMutableArray *modelArray;//存储model的数组
 @property (nonatomic,strong) RATreeView *raTreeView;
@@ -34,40 +31,12 @@ static NSString * const StaffCellIdentifier = @"StaffCellIdentifier";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.departmentArray = [[NSArray alloc] init];
     self.dataSourceArray = [NSMutableArray array];
-
+    self.modelArray = [NSMutableArray array];
+    
     [self getDataWithContact];
     [self.view addSubview:self.raTreeView];
-}
-
-- (NSArray <NodeModel*>*)handelOffices:(NSArray <Offices*>*)officeModelsArray{
-    NSMutableArray *resultArray = [NSMutableArray array];
-
-    [officeModelsArray enumerateObjectsUsingBlock:^(Offices * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-   
-       NodeModel *node = [self dealStaffs:obj];
-       if (obj.subOffice.count > 0) {
-            NSArray *subOfficeArray = [self handelOffices:obj.subOffice];
-            NSLog(@"subOfficeArray:%@",subOfficeArray);
-           [subOfficeArray enumerateObjectsUsingBlock:^(NodeModel *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-               [node addChild:obj];
-           }];
-        }
-       [resultArray addObject:node];
-    }];
-    return resultArray;
-}
-
-- (NodeModel *)dealStaffs:(Offices *)officeModel{
-    NSMutableArray *models = [NSMutableArray array];
-    [officeModel.staff enumerateObjectsUsingBlock:^(Staffs * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        NodeModel *node = [NodeModel dataObjectWithName:obj.name ID:obj.userId staff:obj children:nil];
-         [models addObject:node];
-    }];
     
-    NodeModel *node = [NodeModel dataObjectWithName:officeModel.name ID:officeModel.departID staff:nil children:models];
-    return node;
 }
 
 - (void)getDataWithContact {
@@ -94,37 +63,40 @@ static NSString * const StaffCellIdentifier = @"StaffCellIdentifier";
     });
 }
 
+- (NSArray <NodeModel*>*)handelOffices:(NSArray <Offices*>*)officeModelsArray{
+    NSMutableArray *resultArray = [NSMutableArray array];
 
-- (NSMutableArray *)modelArray {
-    if (!_modelArray) {
-        _modelArray = [NSMutableArray array];
-    }
-    return _modelArray;
+    [officeModelsArray enumerateObjectsUsingBlock:^(Offices * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+   
+       NodeModel *node = [self dealStaffs:obj];
+       if (obj.subOffice.count > 0) {
+            NSArray *subOfficeArray = [self handelOffices:obj.subOffice];
+           [subOfficeArray enumerateObjectsUsingBlock:^(NodeModel *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+               [node addChild:obj];
+           }];
+        }
+       [resultArray addObject:node];
+    }];
+    return resultArray;
 }
 
-- (RATreeView *)raTreeView
-{
-    if (!_raTreeView) {
-        //创建raTreeView
-        _raTreeView = [[RATreeView alloc] init];
-        _raTreeView.frame = self.view.bounds;
-        //_raTreeView.separatorStyle =  RATreeViewCellSeparatorStyleNone;
-        _raTreeView.treeFooterView = [[UIView alloc] init];
-        //设置代理
-        _raTreeView.delegate = self;
-        _raTreeView.dataSource = self;
-        //注册单元格
-        [_raTreeView registerClass:[UITableViewCell class] forCellReuseIdentifier:OfficeCellIdentifier];
-        [_raTreeView registerClass:[ContactCell class] forCellReuseIdentifier:StaffCellIdentifier];
-    }
-    return _raTreeView;
+- (NodeModel *)dealStaffs:(Offices *)officeModel{
+    NSMutableArray *models = [NSMutableArray array];
+    [officeModel.staff enumerateObjectsUsingBlock:^(Staffs * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NodeModel *node = [NodeModel dataObjectWithName:obj.name ID:obj.userId staff:obj children:nil];
+         [models addObject:node];
+    }];
+    
+    NodeModel *node = [NodeModel dataObjectWithName:officeModel.name ID:officeModel.departID staff:nil children:models];
+    return node;
 }
 
-
+/*
+ 根据ID，递归查询点击的用户信息，效率较慢，不推荐使用，可以直接在节点NodeModel里面加staff模型，
 - (Staffs *)getContactUserInfo:(NSString *)userId {
     __block Staffs *node;
 
-    [self.dataSourceArray enumerateObjectsUsingBlock:^(ContactModel *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    [self.modelArray enumerateObjectsUsingBlock:^(ContactModel *obj, NSUInteger idx, BOOL * _Nonnull stop) {
        node = [self getContactOffices:obj.offices userId:userId];
     }];
     return node;
@@ -133,14 +105,15 @@ static NSString * const StaffCellIdentifier = @"StaffCellIdentifier";
 - (Staffs *)getContactOffices:(NSArray <Offices*>*)officeModelsArray userId:(NSString *)userId  {
     __block Staffs *node;
     [officeModelsArray enumerateObjectsUsingBlock:^(Offices * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-    
+        
         node = [self getUserInfo:obj userId:userId];
-        if (obj.subOffice.count > 0) {
+        if (node) {
+            *stop = YES;
+        }else if (obj.subOffice.count > 0) {
             node = [self getContactOffices:obj.subOffice userId:userId];
-             //NSLog(@"subOfficeArray:%@",subOfficeArray);
-//            [subOfficeArray enumerateObjectsUsingBlock:^(NodeModel *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-//                [node addChild:obj];
-//            }];
+            if (node) {
+                *stop = YES;
+            }
          }
      }];
     return node;
@@ -154,8 +127,9 @@ static NSString * const StaffCellIdentifier = @"StaffCellIdentifier";
                 *stop = YES;
             }
         }];
-    return nil;
+    return result;
 }
+*/
 
 //返回cell
 - (UITableViewCell *)treeView:(RATreeView *)treeView cellForItem:(id)item {
@@ -185,57 +159,7 @@ static NSString * const StaffCellIdentifier = @"StaffCellIdentifier";
            [cell updateSubViewFrame:level];
            return cell;
      }
-    
-    /*
-    if ([item isKindOfClass:[ContactModel class]]) {// 公司层
-       
-        UITableViewCell *cell = [treeView dequeueReusableCellWithIdentifier:CompanyCellIdentifier];
-        [cell.contentView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 
-        UIImageView * clickImageView = [[UIImageView alloc] initWithFrame:CGRectMake(15 , 18.5 , 8 , 11)];
-        clickImageView.centerY = 50  * 0.5;
-        clickImageView.image = [UIImage imageNamed:@"contact_shouqi"];
-        clickImageView.tag = 200;
-        [cell.contentView addSubview:clickImageView];
-        
-        ContactModel *model = item;
-        UILabel *company = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(clickImageView.frame) + 5, 0, SCREEN_WIDTH, cell.height)];
-         company.centerY = clickImageView.centerY;
-        company.font = [UIFont systemFontOfSize:16];
-        company.textColor = [MyControl colorWithHexString:@"#333333"];
-        company.text = [NSString stringWithFormat:@"%@ (%zd)",model.name,model.personNO];
-        [cell.contentView addSubview:company];
-        return cell;
-        
-    } else if ([item isKindOfClass:[Offices class]]) {// 公司下的部门层
-        UITableViewCell *cell = [treeView dequeueReusableCellWithIdentifier:OfficeCellIdentifier];
-        [cell.contentView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-        UIImageView * ImageView = [[UIImageView alloc] initWithFrame:CGRectMake(level*15+11 , 18.5 , 8 , 11)];
-        ImageView.centerY = 50  * 0.5;
-        ImageView.image = [UIImage imageNamed:@"contact_shouqi"];
-        ImageView.tag = 300;
-        [cell.contentView addSubview:ImageView];
-        
-        Offices *office = item;
-        UILabel *officeLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(ImageView.frame) + 5, 0, SCREEN_WIDTH, cell.height)];
-        officeLabel.centerY = ImageView.centerY;
-        officeLabel.font = [UIFont systemFontOfSize:16];
-        officeLabel.textColor = [MyControl colorWithHexString:@"#333333"];
-        officeLabel.text = [NSString stringWithFormat:@"%@(%zd)",office.name,office.personNO];
-        [cell.contentView addSubview:officeLabel];
-        return cell;
-    }else if ([item isKindOfClass:[Staffs class]]) {// 员工层
-        ContactCell *cell = [treeView dequeueReusableCellWithIdentifier:StaffCellIdentifier];
-        Staffs *staff = item;
-        if ([Global share].contactSelectType == ContactVcSelectTypeMultiSelect) {
-            cell.checkButton.hidden = NO;
-        } else {
-            cell.checkButton.hidden = YES;
-        }
-        cell.staffModel = staff;
-        return cell;
-    }
-     */
     return nil;
 }
 /**
@@ -253,33 +177,6 @@ static NSString * const StaffCellIdentifier = @"StaffCellIdentifier";
        }
        NodeModel *node = item;
        return node.children.count;
-    /*
-    NSInteger treeNum = self.modelArray.count;
-    if (item == nil) {
-        treeNum = self.modelArray.count;
-    }
-    //NSLog(@"numberOfChildrenOfItem: level:%zd,item:%@",level,item);
-
-    if ([item isKindOfClass:[ContactModel class]]) {
-          ContactModel *model = (ContactModel *)item;
-          NSArray<Offices*> *officeModelArray =  model.offices;
-          treeNum = officeModelArray.count;
-    } else if([item isKindOfClass:[Offices class]]) {
-        Offices *office = (Offices *)item;
-        NSInteger subOfficeNum = 0;
-        NSInteger staffNum = 0;
-        
-        if (office.subOffice.count > 0) {
-             subOfficeNum =  office.subOffice.count;
-        }
-        if (office.staff.count >0) {
-             staffNum = office.staff.count;
-        }
-        treeNum = subOfficeNum + staffNum;
-    }
-    
-  return treeNum;
-      */
 }
 /**
  *必须实现的dataSource方法
@@ -298,30 +195,6 @@ static NSString * const StaffCellIdentifier = @"StaffCellIdentifier";
    NodeModel *node = item;
    return node.children[index];
 
-    /*
-    if (item == nil) {
-        return self.modelArray[index];
-    }
-
-    if ([item isKindOfClass:[ContactModel class]]) {
-         ContactModel *contact = item;
-         return contact.offices[index];
-    } else if([item isKindOfClass:[Offices class]]) {
-         Offices *office = (Offices *)item;
-        NSMutableArray *staffsArray = [NSMutableArray array];
-        if (office.subOffice.count > 0) {
-             [staffsArray addObjectsFromArray:office.subOffice];
-        }
-        
-        if (office.staff.count > 0) {
-            [staffsArray addObjectsFromArray:office.staff];
-        }
-      
-        return staffsArray[index];
-    }
-    
-    return nil;
-     */
 }
 
 
@@ -334,25 +207,9 @@ static NSString * const StaffCellIdentifier = @"StaffCellIdentifier";
     
     NodeModel *model = item;
     NSLog(@"staff:%@",model.staff);
-//    if (model.staff) {
-//        Staffs *staffModel = model.staff;
-//        if ([Global share].contactSelectType == ContactVcSelectTypeMultiSelect) {
-//            staffModel.isCheck = !staffModel.isCheck;
-//            [self.select addObject:item];
-//            [self.raTreeView reloadRowsForItems:self.select withRowAnimation:RATreeViewRowAnimationNone];
-//
-//            if ([self.delegate respondsToSelector:@selector(contactOrganizationView:selectStaffsModel:)]) {
-//                [self.delegate contactOrganizationView:self selectStaffsModel:staffModel];
-//            }
-//        } else if([Global share].contactSelectType == ContactVcSelectTypeSingleSelect) {
-//            UserInfoVc * userInfoVc = [[UserInfoVc alloc] initWithUserInfo:staffModel.userId companyId:staffModel.companyId officeId:staffModel.officeId];
-//            [[Tool getCurrentVC].navigationController pushViewController:userInfoVc animated:YES];
-//        } else {// 点击选择名片
-//            if ([self.delegate respondsToSelector:@selector(contactOrganizationView:selectStaffsModel:)]) {
-//                [self.delegate contactOrganizationView:self selectStaffsModel:staffModel];
-//            }
-//        }
-//    }
+    
+   //Staffs *staff = [self getContactUserInfo:model.ID ];
+   // NSLog(@"name:%@,userId:%@,profileImg:%@",staff.name, staff.userId, staff.profileImg);
     
 }
 
@@ -420,5 +277,24 @@ static NSString * const StaffCellIdentifier = @"StaffCellIdentifier";
 - (void)treeView:(RATreeView *)treeView didCollapseRowForItem:(id)item {
 
 }
+
+- (RATreeView *)raTreeView
+{
+    if (!_raTreeView) {
+        //创建raTreeView
+        _raTreeView = [[RATreeView alloc] init];
+        _raTreeView.frame = self.view.bounds;
+        //_raTreeView.separatorStyle =  RATreeViewCellSeparatorStyleNone;
+        _raTreeView.treeFooterView = [[UIView alloc] init];
+        //设置代理
+        _raTreeView.delegate = self;
+        _raTreeView.dataSource = self;
+        //注册单元格
+        [_raTreeView registerClass:[UITableViewCell class] forCellReuseIdentifier:OfficeCellIdentifier];
+        [_raTreeView registerClass:[ContactCell class] forCellReuseIdentifier:StaffCellIdentifier];
+    }
+    return _raTreeView;
+}
+
 
 @end
