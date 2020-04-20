@@ -91,46 +91,6 @@ static NSString * const StaffCellIdentifier = @"StaffCellIdentifier";
     return node;
 }
 
-/*
- 根据ID，递归查询点击的用户信息，效率较慢，不推荐使用，可以直接在节点NodeModel里面加staff模型，
-- (Staffs *)getContactUserInfo:(NSString *)userId {
-    __block Staffs *node;
-
-    [self.modelArray enumerateObjectsUsingBlock:^(ContactModel *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-       node = [self getContactOffices:obj.offices userId:userId];
-    }];
-    return node;
-}
-
-- (Staffs *)getContactOffices:(NSArray <Offices*>*)officeModelsArray userId:(NSString *)userId  {
-    __block Staffs *node;
-    [officeModelsArray enumerateObjectsUsingBlock:^(Offices * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        
-        node = [self getUserInfo:obj userId:userId];
-        if (node) {
-            *stop = YES;
-        }else if (obj.subOffice.count > 0) {
-            node = [self getContactOffices:obj.subOffice userId:userId];
-            if (node) {
-                *stop = YES;
-            }
-         }
-     }];
-    return node;
-}
-
-- (Staffs *)getUserInfo:(Offices *)officeArray userId:(NSString *)userId {
-    __block Staffs *result;
-        [officeArray.staff enumerateObjectsUsingBlock:^(Staffs * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            if ([obj.userId isEqualToString:userId]) {
-                result = obj;
-                *stop = YES;
-            }
-        }];
-    return result;
-}
-*/
-
 //返回cell
 - (UITableViewCell *)treeView:(RATreeView *)treeView cellForItem:(id)item {
     NSInteger level = [treeView levelForCellForItem:item];
