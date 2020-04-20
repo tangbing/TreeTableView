@@ -7,7 +7,6 @@ target 'TreeTableViewDemo' do
   pod 'RATreeView', '~> 2.1.2'
   pod 'SDWebImage'
   pod 'YYCategories'
-  pod 'YYModel'
   # Pods for TreeTableViewDemo
 
 end
