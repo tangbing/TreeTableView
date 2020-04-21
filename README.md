@@ -6,9 +6,11 @@
 
 ## 一. 之前通讯录是三级层级，公司->部门->员工，但这次需求一改，要求在部门下还有子部门，子部门下还有部门，层级结构不固定，完全有后台返回的数据决定，最后终于完成了需求，效果如下:
 
-```html
-<img src="https://github.com/tangbing/TreeTableView/blob/master/Screens/treeTableView.gif" width="375" alt="效果图">
-```
+[![](https://github.com/tangbing/TreeTableView/blob/master/Screens/treeTableView.gif)](https://github.com/tangbing/TreeTableView/blob/master/Screens/treeTableView.gif) 
+
+
+
+
 
 二.这里我用到了第三方库[RATreeView](https://github.com/Augustyniak/RATreeView)实现，关键代码我以下会贴出
 
