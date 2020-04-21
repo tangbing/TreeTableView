@@ -16,15 +16,16 @@
 @property (nonatomic, copy)NSString *ID;
 
 @property (nonatomic, copy)NSString *name;
-
+// 员工模型
 @property (nonatomic, strong)Staffs *staff;
 
 @property (nonatomic, strong)NSArray *children;
 
-
+// 初始化节点数据
 - (id)initWithName:(NSString *)name ID:(NSString *)ID staff:(Staffs *)staffModel children:(NSArray *)array;
 
 + (id)dataObjectWithName:(NSString *)name ID:(NSString *)ID staff:(Staffs *)staffModel children:(NSArray *)children;
+// 添加子节点
 - (void)addChild:(id)child;
     
 @end

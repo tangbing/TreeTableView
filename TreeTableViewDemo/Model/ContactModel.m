@@ -43,7 +43,7 @@
 @end
 
 @implementation NodeModel
-
+// 初始化节点数据
 - (id)initWithName:(NSString *)name ID:(NSString *)ID staff:(Staffs *)staffModel children:(NSArray *)array {
     self = [super init];
     if (self) {
@@ -58,7 +58,7 @@
 + (id)dataObjectWithName:(NSString *)name ID:(NSString *)ID staff:(Staffs *)staffModel children:(NSArray *)children {
     return [[self alloc] initWithName:name ID:ID staff:staffModel children:children];
 }
-
+// 添加子节点
 - (void)addChild:(id)child
 {
   NSMutableArray *children = [self.children mutableCopy];

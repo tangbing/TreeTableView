@@ -52,7 +52,7 @@ static NSString * const StaffCellIdentifier = @"StaffCellIdentifier";
         }
 
         [self.modelArray enumerateObjectsUsingBlock:^(ContactModel  *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            NSArray <NodeModel *>*array = [self handelOffices:obj.offices];
+            NSArray <NodeModel *>*array = [self handleOffices:obj.offices];
             NodeModel *node = [NodeModel dataObjectWithName:obj.name ID:obj.ID staff:nil children:array];
          [self.dataSourceArray addObject:node];
             
@@ -63,14 +63,14 @@ static NSString * const StaffCellIdentifier = @"StaffCellIdentifier";
     });
 }
 
-- (NSArray <NodeModel*>*)handelOffices:(NSArray <Offices*>*)officeModelsArray{
+- (NSArray <NodeModel*>*)handleOffices:(NSArray <Offices*>*)officeModelsArray{
     NSMutableArray *resultArray = [NSMutableArray array];
 
     [officeModelsArray enumerateObjectsUsingBlock:^(Offices * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-   
-       NodeModel *node = [self dealStaffs:obj];
+       // 这里递归调用把Offices数据以及子Offices数据，转成节点NodeModel数据，
+       NodeModel *node = [self handelStaffs:obj];
        if (obj.subOffice.count > 0) {
-            NSArray *subOfficeArray = [self handelOffices:obj.subOffice];
+            NSArray *subOfficeArray = [self handleOffices:obj.subOffice];
            [subOfficeArray enumerateObjectsUsingBlock:^(NodeModel *obj, NSUInteger idx, BOOL * _Nonnull stop) {
                [node addChild:obj];
            }];
@@ -80,7 +80,7 @@ static NSString * const StaffCellIdentifier = @"StaffCellIdentifier";
     return resultArray;
 }
 
-- (NodeModel *)dealStaffs:(Offices *)officeModel{
+- (NodeModel *)handelStaffs:(Offices *)officeModel{
     NSMutableArray *models = [NSMutableArray array];
     [officeModel.staff enumerateObjectsUsingBlock:^(Staffs * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         NodeModel *node = [NodeModel dataObjectWithName:obj.name ID:obj.userId staff:obj children:nil];
